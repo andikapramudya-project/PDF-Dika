@@ -1,5 +1,5 @@
 // Offline cache. Bump VERSION whenever files change so visitors get the update.
-const VERSION = 'pdfdika-v1';
+const VERSION = 'pdfdika-v2';
 const FILES = [
   './',
   'css/style.css',
@@ -12,6 +12,9 @@ const FILES = [
   'index.html',
   'js/app.js',
   'js/core.js',
+  'js/reflow/engine.js',
+  'js/reflow/export.js',
+  'js/reflow/reader.js',
   'js/tools.js',
   'js/tools/_placer.js',
   'js/tools/_single.js',
@@ -28,6 +31,8 @@ const FILES = [
   'js/tools/organize.js',
   'js/tools/pdf2img.js',
   'js/tools/pdf2text.js',
+  'js/tools/pdf2word.js',
+  'js/tools/reflow.js',
   'js/tools/reverse.js',
   'js/tools/rotate.js',
   'js/tools/scrub.js',

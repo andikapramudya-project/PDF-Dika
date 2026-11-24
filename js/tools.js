@@ -44,6 +44,7 @@ const ic = {
   resize: '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M14 10l7-7M15 3h6v6M10 14l-7 7M3 15v6h6"/>',
   form: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9h4M7 14h10"/><rect x="14" y="8" width="3" height="2"/>',
   header: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 7h16M4 17h16"/>',
+  reflow: '<rect x="3" y="3" width="8" height="18" rx="1.5"/><path d="M5.5 7h3M5.5 10h3M5.5 13h3"/><rect x="14" y="6" width="7" height="15" rx="1.5"/><path d="M16 10h3M16 13h3M16 16h2"/><path d="M11 9.5l3 0"/>',
   bookmark: '<path d="M6 3h12v18l-6-4-6 4z"/>',
 };
 
@@ -76,10 +77,11 @@ export const TOOLS = [
   S('bookmarks', 'edit', 'bookmark', { id: 'Tambah bookmark', en: 'Add bookmarks' }, { id: 'Buat daftar isi yang bisa diklik.', en: 'Build a clickable table of contents.' }),
 
   // Convert
+  T('reflow', 'convert', 'reflow', { id: 'Mode baca & EPUB', en: 'Reading mode & EPUB' }, { id: 'Susun ulang PDF agar nyaman dibaca di HP. Simpan sebagai HTML offline atau EPUB.', en: 'Reflow a PDF for comfortable phone reading. Save as offline HTML or EPUB.' }, { accept: '.pdf,application/pdf', featured: true, kw: 'reflow epub html baca ebook buku kindle novel mobile hp' }),
+  T('pdf2word', 'convert', 'word', { id: 'PDF ke Word', en: 'PDF to Word' }, { id: 'Ubah PDF menjadi DOCX yang bisa diedit.', en: 'Turn a PDF into an editable DOCX.' }, { accept: '.pdf,application/pdf', kw: 'docx word doc' }),
   T('img2pdf', 'convert', 'img2pdf', { id: 'Gambar ke PDF', en: 'Images to PDF' }, { id: 'Ubah JPG, PNG, atau WebP menjadi satu PDF.', en: 'Turn JPG, PNG or WebP into one PDF.' }, { accept: 'image/jpeg,image/png,image/webp,image/gif,image/bmp,.jpg,.jpeg,.png,.webp', multiple: true, kw: 'jpg png foto' }),
   T('pdf2img', 'convert', 'pdf2img', { id: 'PDF ke gambar', en: 'PDF to images' }, { id: 'Simpan setiap halaman sebagai JPG atau PNG.', en: 'Save every page as JPG or PNG.' }, { accept: '.pdf,application/pdf', kw: 'jpg png foto' }),
   T('pdf2text', 'convert', 'text', { id: 'PDF ke teks', en: 'PDF to text' }, { id: 'Ambil semua teks ke file .txt.', en: 'Pull all text into a .txt file.' }, { accept: '.pdf,application/pdf', kw: 'txt salin copy' }),
-  S('pdf2word', 'convert', 'word', { id: 'PDF ke Word', en: 'PDF to Word' }, { id: 'Ubah PDF menjadi DOCX yang bisa diedit.', en: 'Turn a PDF into an editable DOCX.' }),
   S('pdf2excel', 'convert', 'sheet', { id: 'PDF ke Excel', en: 'PDF to Excel' }, { id: 'Ambil tabel ke XLSX.', en: 'Pull tables into XLSX.' }),
   S('pdf2ppt', 'convert', 'slides', { id: 'PDF ke PowerPoint', en: 'PDF to PowerPoint' }, { id: 'Satu slide untuk setiap halaman.', en: 'One slide per page.' }),
   S('ocr', 'convert', 'ocr', { id: 'OCR PDF', en: 'OCR PDF' }, { id: 'Jadikan hasil scan bisa dicari dan disalin.', en: 'Make scans searchable and selectable.' }),

@@ -5,9 +5,11 @@ Alat PDF yang bekerja sepenuhnya di browser. File tidak pernah diunggah ke serve
 **Situs:** https://andikapramudya-project.github.io/PDF-Dika/
 
 ## Fitur tahap 1
-Gabung, pisah, atur halaman, putar, hapus, ambil halaman, balik urutan, sisipkan halaman kosong, beberapa halaman per lembar, tanda tangan, watermark, nomor halaman, tambah teks, tambah gambar, edit properti, hapus metadata, gambar ke PDF, PDF ke gambar, PDF ke teks.
+**Fitur unggulan: Mode baca & EPUB.** Menyusun ulang PDF (buku, modul, jurnal 2 kolom) agar nyaman dibaca di HP, lalu menyimpannya sebagai HTML offline, EPUB, Word (DOCX), atau PDF ukuran HP.
 
-Tahap 2 (direncanakan): PDF ke Word/Excel/PowerPoint, OCR, kompres, kunci/buka kunci, sensor, potong, dan lainnya.
+Alat lain: gabung, pisah, atur halaman, putar, hapus, ambil halaman, balik urutan, sisipkan halaman kosong, beberapa halaman per lembar, tanda tangan, watermark, nomor halaman, tambah teks, tambah gambar, edit properti, hapus metadata, gambar ke PDF, PDF ke gambar, PDF ke teks, PDF ke Word.
+
+Tahap 2 berikutnya: PDF ke Excel/PowerPoint, OCR, kompres, kunci/buka kunci, sensor, potong, dan lainnya.
 
 ## Teknologi
 - Situs statis tanpa proses build: HTML, CSS, JavaScript modul.

@@ -3,13 +3,20 @@ import { TOOLS, CATS, byId, catOf } from './tools.js';
 
 const app = $('#app');
 const L = {
-  h1: { id: 'Urus PDF tanpa mengirim file ke mana pun.', en: 'Work on PDFs without sending them anywhere.' },
-  lede: { id: 'Gabung, pisah, tanda tangan, dan ubah PDF langsung di browser. Semua diproses di perangkatmu, jadi dokumen pribadi tetap pribadi.', en: 'Merge, split, sign and convert PDFs right in your browser. Everything runs on your device, so private documents stay private.' },
+  h1: { id: 'PDF yang enak dibaca di HP.', en: 'PDFs that read well on your phone.' },
+  lede: { id: 'Mode baca PDFDika menyusun ulang buku, modul, dan jurnal supaya teksnya mengalir mengikuti layar, lalu menyimpannya sebagai HTML offline atau EPUB. Ada juga 20 alat PDF lain, dan semuanya berjalan di perangkatmu.', en: 'PDFDika reading mode reflows books, handouts and papers so the text fits your screen, then saves them as offline HTML or EPUB. Twenty more PDF tools come with it, all running on your device.' },
+  ctaRead: { id: 'Buka Mode baca', en: 'Open reading mode' },
+  ctaTools: { id: 'Lihat semua alat', en: 'See all tools' },
+  demoT: { id: 'Dari halaman kaku jadi bacaan yang mengalir', en: 'From rigid pages to text that flows' },
+  demo1: { id: 'Kolom digabung, kata yang terpotong di akhir baris disambung lagi, header dan nomor halaman dibuang.', en: 'Columns merge, words split across lines are rejoined, headers and page numbers are dropped.' },
+  demo2: { id: 'Huruf miring, tebal, judul bab, dan gambar tetap ikut, lengkap dengan daftar isi.', en: 'Italics, bold, chapter headings and images come along, with a table of contents.' },
+  demo3: { id: 'Hasilnya satu file HTML yang bisa dibaca tanpa internet, atau EPUB untuk aplikasi e-book.', en: 'You get one HTML file that reads without internet, or an EPUB for e-book apps.' },
+  demoTry: { id: 'Coba ganti tema dan ukuran huruf', en: 'Try the theme and text size' },
   p1: { id: 'Tanpa unggahan', en: 'No uploads' },
   p2: { id: 'Tanpa akun', en: 'No account' },
   p3: { id: 'Bisa dipakai offline', en: 'Works offline' },
-  sheetT: { id: 'Taruh PDF atau gambar di sini', en: 'Drop a PDF or images here' },
-  sheetS: { id: 'Lalu pilih apa yang mau dilakukan', en: 'Then choose what to do with it' },
+  sheetT: { id: 'Taruh PDF di sini', en: 'Drop a PDF here' },
+  sheetS: { id: 'Buka di Mode baca, atau pilih alat lain', en: 'Open it in reading mode, or pick another tool' },
   pickedT: { id: '{n} file siap. Mau diapakan?', en: '{n} file(s) ready. What would you like to do?' },
   pickedS: { id: 'Pilih alat. File langsung dibuka di sana.', en: 'Pick a tool. Your files open there straight away.' },
   search: { id: 'Cari alat, misalnya “gabung”', en: 'Search tools, e.g. “merge”' },
@@ -48,6 +55,31 @@ function matches(tool, q) {
   if (!q) return true;
   const hay = [tool.name.id, tool.name.en, tool.desc.id, tool.desc.en, tool.kw || '', tool.id].join(' ').toLowerCase();
   return q.toLowerCase().split(/\s+/).every((w) => hay.includes(w));
+}
+
+// A small live preview of the reader so visitors can feel it before choosing a file.
+function demo() {
+  const text = getLang() === 'id'
+    ? ['Bab 2', 'Kereta Terakhir', 'Peron sudah hampir kosong ketika Sekar sampai. Lampu-lampu kuning memantul di lantai yang baru dipel, dan dari ujung lorong terdengar pengumuman yang diulang dua kali, seolah petugasnya sendiri tidak yakin ada yang mendengar.', 'Ia duduk di bangku paling dekat tangga. Di pangkuannya, sebuah buku tebal terbuka di halaman yang sama sejak minggu lalu.']
+    : ['Chapter 2', 'The Last Train', 'The platform was almost empty when Sekar arrived. Yellow lights shone on the freshly mopped floor, and an announcement echoed twice down the corridor, as if the staff were not sure anyone was listening.', 'She sat on the bench nearest the stairs. In her lap, a thick book lay open at the same page it had been on since last week.'];
+  let size = 15, theme = 'light';
+  const phone = h('div', { class: 'phone', 'data-theme': theme });
+  const body = h('div', { class: 'phone-body', style: { fontSize: size + 'px' } },
+    h('h4', null, text[0], h('br'), text[1]), h('p', null, text[2]), h('p', null, text[3]));
+  const sizeBtn = (label, d, aria) => h('button', { type: 'button', 'aria-label': aria, onclick: () => { size = Math.max(12, Math.min(20, size + d)); body.style.fontSize = size + 'px'; } }, label);
+  phone.append(h('div', { class: 'phone-bar' }, h('span', null, t({ id: 'Daftar isi', en: 'Contents' })),
+    sizeBtn('A−', -1, t({ id: 'Perkecil huruf', en: 'Smaller text' })), sizeBtn('A+', 1, t({ id: 'Perbesar huruf', en: 'Larger text' }))), body);
+  const themes = [['light', t({ id: 'Terang', en: 'Light' })], ['sepia', 'Sepia'], ['dark', t({ id: 'Gelap', en: 'Dark' })]];
+  const sw = h('div', { class: 'demo-themes', role: 'group', 'aria-label': t(L.demoTry) });
+  const drawSw = () => sw.replaceChildren(...themes.map(([v, l]) => h('button', { type: 'button', class: 'demo-sw sw-' + v, 'aria-pressed': String(v === theme), onclick: () => { theme = v; phone.dataset.theme = v; drawSw(); } }, l)));
+  drawSw();
+  const page = h('div', { class: 'mini-page', 'aria-hidden': 'true' }, h('div', { class: 'mini-col' }, ...Array.from({ length: 14 }, () => h('i'))), h('div', { class: 'mini-col' }, ...Array.from({ length: 14 }, () => h('i'))));
+  return h('section', { class: 'demo' },
+    h('div', { class: 'demo-copy' },
+      h('h2', null, t(L.demoT)),
+      h('ul', null, h('li', null, t(L.demo1)), h('li', null, t(L.demo2)), h('li', null, t(L.demo3))),
+      h('a', { class: 'btn primary', href: '#/reflow', style: { width: 'auto' } }, t(L.ctaRead))),
+    h('div', { class: 'demo-visual' }, page, h('span', { class: 'demo-arrow', html: svg(I.right) }), h('div', { class: 'demo-phone' }, phone, sw)));
 }
 
 function renderHome() {
@@ -90,7 +122,7 @@ function renderHome() {
       .filter((x) => files.length === 1 || x.multiple || x.id === 'merge');
     picked.hidden = false;
     picked.replaceChildren(h('h2', null, t(L.pickedT, { n: files.length })), h('p', null, t(L.pickedS)),
-      h('div', { class: 'chips' }, fit.map((x) => h('a', { class: 'chip', href: '#/' + x.id, style: `--cat:${catOf(x.cat).color}` }, h('i', { class: 'dot' }), t(x.name)))));
+      h('div', { class: 'chips' }, fit.sort((a, b) => !!b.featured - !!a.featured).map((x) => h('a', { class: 'chip' + (x.featured ? ' chip-main' : ''), href: '#/' + x.id, style: `--cat:${catOf(x.cat).color}` }, h('i', { class: 'dot' }), t(x.name)))));
     picked.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
   sheet.addEventListener('click', (e) => { if (e.target !== fileIn) fileIn.click(); });
@@ -106,9 +138,11 @@ function renderHome() {
       h('div', null,
         h('h1', null, t(L.h1)),
         h('p', { class: 'lede' }, t(L.lede)),
+        h('div', { class: 'cta' }, h('a', { class: 'btn primary', href: '#/reflow' }, t(L.ctaRead)), h('a', { class: 'btn', href: '#tools', onclick: (e) => { e.preventDefault(); document.getElementById('tools').scrollIntoView({ behavior: 'smooth' }); } }, t(L.ctaTools))),
         h('ul', { class: 'promise' }, ok(L.p1), ok(L.p2), ok(L.p3))),
       sheet),
     picked,
+    demo(),
     h('div', { class: 'dir-head', id: 'tools' }, h('div', { class: 'search' }, h('span', { html: svg(I.search) }), input), chips),
     dir,
     h('section', { class: 'how' },

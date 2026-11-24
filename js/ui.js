@@ -94,7 +94,7 @@ export function fileList({ items, onChange, thumb }) {
       return h('li', { class: 'file', draggable: 'true' },
         h('span', { class: 'grip', html: svg(I.grip) }),
         th,
-        h('div', { class: 'meta' }, h('b', null, it.file.name), h('span', null, [fmtSize(it.file.size), it.info].filter(Boolean).join(' · '))),
+        h('div', { class: 'meta' }, h('b', null, it.file.name), h('span', null, [fmtSize(it.file.size), it.info].filter(Boolean).join(', '))),
         h('div', { class: 'acts' },
           h('button', { class: 'mini', type: 'button', 'aria-label': t({ id: 'Naikkan', en: 'Move up' }), disabled: i === 0, html: svg(I.up), onclick: () => { move(items, i, i - 1); render(); onChange(); } }),
           h('button', { class: 'mini', type: 'button', 'aria-label': t({ id: 'Turunkan', en: 'Move down' }), disabled: i === items.length - 1, html: svg(I.down), onclick: () => { move(items, i, i + 1); render(); onChange(); } }),
