@@ -3,11 +3,13 @@ import { TOOLS, CATS, byId, catOf } from './tools.js';
 
 const app = $('#app');
 const L = {
-  h1: { id: 'PDF yang enak dibaca di HP.', en: 'PDFs that read well on your phone.' },
-  lede: { id: 'Mode baca PDFDika menyusun ulang buku, modul, dan jurnal supaya teksnya mengalir mengikuti layar, lalu menyimpannya sebagai HTML offline atau EPUB. Ada juga 20 alat PDF lain, dan semuanya berjalan di perangkatmu.', en: 'PDFDika reading mode reflows books, handouts and papers so the text fits your screen, then saves them as offline HTML or EPUB. Twenty more PDF tools come with it, all running on your device.' },
-  ctaRead: { id: 'Buka Mode baca', en: 'Open reading mode' },
+  h1: { id: 'Semua alat PDF, langsung di browser.', en: 'Every PDF tool, right in your browser.' },
+  lede: { id: 'Gratis, tanpa unggahan, dan tetap bisa dipakai offline.', en: 'Free, no uploads, and it keeps working offline.' },
+  ctaPick: { id: 'Pilih file', en: 'Choose a file' },
+  ctaRead: { id: 'Coba Mode baca', en: 'Try reading mode' },
   ctaTools: { id: 'Lihat semua alat', en: 'See all tools' },
-  demoT: { id: 'Dari halaman kaku jadi bacaan yang mengalir', en: 'From rigid pages to text that flows' },
+  demoK: { id: 'Contoh alat: Mode baca', en: 'Tool example: Reading mode' },
+  demoT: { id: 'Ubah PDF jadi bacaan yang nyaman di HP', en: 'Turn a PDF into comfortable phone reading' },
   demo1: { id: 'Kolom digabung, kata yang terpotong di akhir baris disambung lagi, header dan nomor halaman dibuang.', en: 'Columns merge, words split across lines are rejoined, headers and page numbers are dropped.' },
   demo2: { id: 'Huruf miring, tebal, judul bab, dan gambar tetap ikut, lengkap dengan daftar isi.', en: 'Italics, bold, chapter headings and images come along, with a table of contents.' },
   demo3: { id: 'Hasilnya satu file HTML yang bisa dibaca tanpa internet, atau EPUB untuk aplikasi e-book.', en: 'You get one HTML file that reads without internet, or an EPUB for e-book apps.' },
@@ -15,8 +17,8 @@ const L = {
   p1: { id: 'Tanpa unggahan', en: 'No uploads' },
   p2: { id: 'Tanpa akun', en: 'No account' },
   p3: { id: 'Bisa dipakai offline', en: 'Works offline' },
-  sheetT: { id: 'Taruh PDF di sini', en: 'Drop a PDF here' },
-  sheetS: { id: 'Buka di Mode baca, atau pilih alat lain', en: 'Open it in reading mode, or pick another tool' },
+  sheetT: { id: 'Taruh PDF atau gambar di sini', en: 'Drop a PDF or images here' },
+  sheetS: { id: 'Lalu pilih alat yang dibutuhkan', en: 'Then pick the tool you need' },
   pickedT: { id: '{n} file siap. Mau diapakan?', en: '{n} file(s) ready. What would you like to do?' },
   pickedS: { id: 'Pilih alat. File langsung dibuka di sana.', en: 'Pick a tool. Your files open there straight away.' },
   search: { id: 'Cari alat, misalnya “gabung”', en: 'Search tools, e.g. “merge”' },
@@ -76,9 +78,10 @@ function demo() {
   const page = h('div', { class: 'mini-page', 'aria-hidden': 'true' }, h('div', { class: 'mini-col' }, ...Array.from({ length: 14 }, () => h('i'))), h('div', { class: 'mini-col' }, ...Array.from({ length: 14 }, () => h('i'))));
   return h('section', { class: 'demo' },
     h('div', { class: 'demo-copy' },
+      h('p', { class: 'kicker' }, t(L.demoK)),
       h('h2', null, t(L.demoT)),
       h('ul', null, h('li', null, t(L.demo1)), h('li', null, t(L.demo2)), h('li', null, t(L.demo3))),
-      h('a', { class: 'btn primary', href: '#/reflow', style: { width: 'auto' } }, t(L.ctaRead))),
+      h('a', { class: 'btn', href: '#/reflow' }, t(L.ctaRead))),
     h('div', { class: 'demo-visual' }, page, h('span', { class: 'demo-arrow', html: svg(I.right) }), h('div', { class: 'demo-phone' }, phone, sw)));
 }
 
@@ -88,7 +91,7 @@ function renderHome() {
   const chips = h('div', { class: 'chips', role: 'group' });
   const drawChips = () => chips.replaceChildren(
     h('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.cat === 'all'), onclick: () => { state.cat = 'all'; drawChips(); drawDir(); } }, t(L.all)),
-    ...CATS.map((c) => h('button', { class: 'chip', type: 'button', style: `--cat:${c.color}`, 'aria-pressed': String(state.cat === c.id), onclick: () => { state.cat = c.id; drawChips(); drawDir(); } }, h('i', { class: 'dot' }), t(c.name))));
+    ...CATS.map((c) => h('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.cat === c.id), onclick: () => { state.cat = c.id; drawChips(); drawDir(); } }, h('span', { class: 'cic', html: svg(c.icon) }), t(c.name))));
   const drawDir = () => {
     const groups = CATS.filter((c) => state.cat === 'all' || state.cat === c.id).map((c) => {
       const list = TOOLS.filter((x) => x.cat === c.id && matches(x, state.q))
@@ -122,7 +125,7 @@ function renderHome() {
       .filter((x) => files.length === 1 || x.multiple || x.id === 'merge');
     picked.hidden = false;
     picked.replaceChildren(h('h2', null, t(L.pickedT, { n: files.length })), h('p', null, t(L.pickedS)),
-      h('div', { class: 'chips' }, fit.sort((a, b) => !!b.featured - !!a.featured).map((x) => h('a', { class: 'chip' + (x.featured ? ' chip-main' : ''), href: '#/' + x.id, style: `--cat:${catOf(x.cat).color}` }, h('i', { class: 'dot' }), t(x.name)))));
+      h('div', { class: 'chips' }, fit.map((x) => h('a', { class: 'chip', href: '#/' + x.id }, h('span', { class: 'cic', html: svg(x.icon) }), t(x.name)))));
     picked.scrollIntoView({ behavior: 'smooth', block: 'center' });
   };
   sheet.addEventListener('click', (e) => { if (e.target !== fileIn) fileIn.click(); });
@@ -132,24 +135,22 @@ function renderHome() {
   sheet.addEventListener('dragleave', () => sheet.classList.remove('over'));
   sheet.addEventListener('drop', (e) => { e.preventDefault(); sheet.classList.remove('over'); takeFiles(e.dataTransfer.files); });
 
-  const ok = (s) => h('li', null, h('span', { html: svg(I.checkCircle) }), t(s));
   app.replaceChildren(h('div', { class: 'wrap' },
     h('section', { class: 'hero intro' },
       h('div', null,
         h('h1', null, t(L.h1)),
         h('p', { class: 'lede' }, t(L.lede)),
-        h('div', { class: 'cta' }, h('a', { class: 'btn primary', href: '#/reflow' }, t(L.ctaRead)), h('a', { class: 'btn', href: '#tools', onclick: (e) => { e.preventDefault(); document.getElementById('tools').scrollIntoView({ behavior: 'smooth' }); } }, t(L.ctaTools))),
-        h('ul', { class: 'promise' }, ok(L.p1), ok(L.p2), ok(L.p3))),
+        h('div', { class: 'cta' }, h('button', { class: 'btn primary', type: 'button', onclick: () => fileIn.click() }, t(L.ctaPick)), h('a', { class: 'btn', href: '#tools', onclick: (e) => { e.preventDefault(); document.getElementById('tools').scrollIntoView({ behavior: 'smooth' }); } }, t(L.ctaTools)))),
       sheet),
     picked,
-    demo(),
     h('div', { class: 'dir-head', id: 'tools' }, h('div', { class: 'search' }, h('span', { html: svg(I.search) }), input), chips),
     dir,
+    demo(),
     h('section', { class: 'how' },
       h('div', null, h('h3', null, t(L.how1t)), h('p', null, t(L.how1p))),
       h('div', null, h('h3', null, t(L.how2t)), h('p', null, t(L.how2p))),
       h('div', null, h('h3', null, t(L.how3t)), h('p', null, t(L.how3p))))));
-  document.title = 'PDFDika: ' + t({ id: 'alat PDF yang bekerja di perangkatmu', en: 'PDF tools that run on your device' });
+  document.title = 'PDFDika: ' + t({ id: 'semua alat PDF, langsung di browser', en: 'every PDF tool, right in your browser' });
 }
 
 async function renderTool(tool) {

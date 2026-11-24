@@ -1,12 +1,12 @@
 {
   "name": "PDFDika",
   "short_name": "PDFDika",
-  "description": "Alat PDF yang bekerja di perangkatmu. Tanpa unggahan.",
+  "description": "Semua alat PDF, langsung di browser. Tanpa unggahan.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F3F5FA",
-  "theme_color": "#2346E0",
+  "theme_color": "#131B3A",
   "lang": "id",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },

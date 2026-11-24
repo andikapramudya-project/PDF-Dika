@@ -176,3 +176,51 @@ export function reportError(e) {
 
 /** Files handed over from the home page drop target to the chosen tool. */
 export const handoff = { files: null };
+
+// ---------- Heavy WebAssembly tools, loaded only when a tool needs them ----------
+function loadScript(rel) {
+  return new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = new URL(rel, import.meta.url).href; s.onload = res; s.onerror = () => rej(new Error('Gagal memuat ' + rel));
+    document.head.append(s);
+  });
+}
+
+let _tess;
+/** Tesseract OCR worker for the given languages ("ind+eng"). */
+export async function ocrWorker(langs, onProgress) {
+  if (!window.Tesseract) await loadScript('../vendor/tesseract/tesseract.min.js');
+  const base = new URL('../vendor/tesseract/', import.meta.url).href;
+  if (_tess && _tess.langs === langs) return _tess.worker;
+  if (_tess) await _tess.worker.terminate();
+  const worker = await window.Tesseract.createWorker(langs.split('+'), 1, {
+    workerPath: base + 'worker.min.js', corePath: base + 'core', langPath: base + 'lang',
+    workerBlobURL: false,
+    logger: (m) => onProgress?.(m),
+  });
+  _tess = { langs, worker };
+  return worker;
+}
+
+let _qpdf;
+/** qpdf compiled to WebAssembly. run(args, inputBytes) → output bytes. */
+export async function qpdf() {
+  if (!_qpdf) {
+    const prev = window.Module;
+    await loadScript('../vendor/qpdf/qpdf.js');
+    const create = window.Module; window.Module = prev;
+    _qpdf = create;
+  }
+  // a fresh instance per run keeps the in-memory file system clean
+  const inst = await _qpdf({ locateFile: () => new URL('../vendor/qpdf/qpdf.wasm', import.meta.url).href, noInitialRun: true, print: () => {}, printErr: (e) => (inst._err = (inst._err || '') + e + '\n') });
+  return {
+    run(args, input) {
+      inst.FS.writeFile('/in.pdf', input);
+      let code;
+      try { code = inst.callMain([...args.map((a) => (a === '{in}' ? '/in.pdf' : a === '{out}' ? '/out.pdf' : a))]); }
+      catch (e) { code = e?.status ?? 2; }
+      if (code !== 0 && code !== 3) { const err = new Error(inst._err || 'qpdf ' + code); err.code = code; throw err; }
+      return inst.FS.readFile('/out.pdf');
+    },
+  };
+}

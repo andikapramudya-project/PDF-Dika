@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>PDFDika: alat PDF yang bekerja di perangkatmu</title>
+<title>PDFDika: semua alat PDF, langsung di browser</title>
 <meta name="description" content="Gabung, pisah, putar, tanda tangan, dan ubah PDF langsung di browser. File tidak pernah diunggah ke server.">
 <meta name="theme-color" content="#F3F5FA" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#10131C" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/apple-180.png">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/jakarta.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 <script>
   // Apply saved theme before paint to avoid a flash.
@@ -22,7 +22,7 @@
 <header class="topbar">
   <div class="topbar-in">
     <a class="brand" href="#/" aria-label="PDFDika, beranda">
-      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 3h13l7 7v17a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="var(--ink)"/><path d="M20 3v5a2 2 0 0 0 2 2h5" fill="var(--hi)"/><path d="M11 12h4.2c3.6 0 5.8 2.2 5.8 5.5S18.8 23 15.2 23H11z" fill="none" stroke="var(--bg)" stroke-width="2.4" stroke-linejoin="round"/></svg>
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="bm-bg" width="32" height="32" rx="8"/><path d="M9 6.5h10l5 5V25a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 8 25V8A1.5 1.5 0 0 1 9.5 6.5z" fill="#fff"/><path d="M19 6.5V10a1.5 1.5 0 0 0 1.5 1.5H24z" fill="var(--hi)"/><circle cx="14.6" cy="19.6" r="3.3" fill="none" stroke="#131B3A" stroke-width="2.2"/><path d="M17.9 13v10" stroke="#131B3A" stroke-width="2.2" stroke-linecap="round"/></svg>
       <span class="brand-name">PDF<b>Dika</b></span>
     </a>
     <div class="top-actions">

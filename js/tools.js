@@ -1,11 +1,11 @@
 // Tool catalogue. status 'ready' tools have a module in js/tools/<id>.js; 'soon' tools are stage 2.
 
 export const CATS = [
-  { id: 'organize', color: 'var(--c-organize)', name: { id: 'Atur halaman', en: 'Organize pages' } },
-  { id: 'edit', color: 'var(--c-edit)', name: { id: 'Edit & tanda tangan', en: 'Edit & sign' } },
-  { id: 'convert', color: 'var(--c-convert)', name: { id: 'Konversi', en: 'Convert' } },
-  { id: 'optimize', color: 'var(--c-optimize)', name: { id: 'Optimasi', en: 'Optimize' } },
-  { id: 'security', color: 'var(--c-security)', name: { id: 'Keamanan & privasi', en: 'Security & privacy' } },
+  { id: 'organize', color: 'var(--accent)', icon: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>', name: { id: 'Atur halaman', en: 'Organize pages' } },
+  { id: 'edit', color: 'var(--accent)', icon: '<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>', name: { id: 'Edit & tanda tangan', en: 'Edit & sign' } },
+  { id: 'convert', color: 'var(--accent)', icon: '<path d="M4 8h13M13 4l4 4-4 4"/><path d="M20 16H7M11 20l-4-4 4-4"/>', name: { id: 'Konversi', en: 'Convert' } },
+  { id: 'optimize', color: 'var(--accent)', icon: '<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>', name: { id: 'Optimasi', en: 'Optimize' } },
+  { id: 'security', color: 'var(--accent)', icon: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>', name: { id: 'Keamanan & privasi', en: 'Security & privacy' } },
 ];
 
 const ic = {
@@ -77,26 +77,26 @@ export const TOOLS = [
   S('bookmarks', 'edit', 'bookmark', { id: 'Tambah bookmark', en: 'Add bookmarks' }, { id: 'Buat daftar isi yang bisa diklik.', en: 'Build a clickable table of contents.' }),
 
   // Convert
-  T('reflow', 'convert', 'reflow', { id: 'Mode baca & EPUB', en: 'Reading mode & EPUB' }, { id: 'Susun ulang PDF agar nyaman dibaca di HP. Simpan sebagai HTML offline atau EPUB.', en: 'Reflow a PDF for comfortable phone reading. Save as offline HTML or EPUB.' }, { accept: '.pdf,application/pdf', featured: true, kw: 'reflow epub html baca ebook buku kindle novel mobile hp' }),
+  T('reflow', 'convert', 'reflow', { id: 'Mode baca & EPUB', en: 'Reading mode & EPUB' }, { id: 'Susun ulang PDF agar nyaman dibaca di HP. Simpan sebagai HTML offline atau EPUB.', en: 'Reflow a PDF for comfortable phone reading. Save as offline HTML or EPUB.' }, { accept: '.pdf,application/pdf', kw: 'reflow epub html baca ebook buku kindle novel mobile hp' }),
   T('pdf2word', 'convert', 'word', { id: 'PDF ke Word', en: 'PDF to Word' }, { id: 'Ubah PDF menjadi DOCX yang bisa diedit.', en: 'Turn a PDF into an editable DOCX.' }, { accept: '.pdf,application/pdf', kw: 'docx word doc' }),
   T('img2pdf', 'convert', 'img2pdf', { id: 'Gambar ke PDF', en: 'Images to PDF' }, { id: 'Ubah JPG, PNG, atau WebP menjadi satu PDF.', en: 'Turn JPG, PNG or WebP into one PDF.' }, { accept: 'image/jpeg,image/png,image/webp,image/gif,image/bmp,.jpg,.jpeg,.png,.webp', multiple: true, kw: 'jpg png foto' }),
   T('pdf2img', 'convert', 'pdf2img', { id: 'PDF ke gambar', en: 'PDF to images' }, { id: 'Simpan setiap halaman sebagai JPG atau PNG.', en: 'Save every page as JPG or PNG.' }, { accept: '.pdf,application/pdf', kw: 'jpg png foto' }),
   T('pdf2text', 'convert', 'text', { id: 'PDF ke teks', en: 'PDF to text' }, { id: 'Ambil semua teks ke file .txt.', en: 'Pull all text into a .txt file.' }, { accept: '.pdf,application/pdf', kw: 'txt salin copy' }),
   S('pdf2excel', 'convert', 'sheet', { id: 'PDF ke Excel', en: 'PDF to Excel' }, { id: 'Ambil tabel ke XLSX.', en: 'Pull tables into XLSX.' }),
   S('pdf2ppt', 'convert', 'slides', { id: 'PDF ke PowerPoint', en: 'PDF to PowerPoint' }, { id: 'Satu slide untuk setiap halaman.', en: 'One slide per page.' }),
-  S('ocr', 'convert', 'ocr', { id: 'OCR PDF', en: 'OCR PDF' }, { id: 'Jadikan hasil scan bisa dicari dan disalin.', en: 'Make scans searchable and selectable.' }),
+  T('ocr', 'convert', 'ocr', { id: 'OCR PDF', en: 'OCR PDF' }, { id: 'Jadikan hasil scan atau foto dokumen bisa dicari dan disalin.', en: 'Make scans and document photos searchable and copyable.' }, { accept: '.pdf,application/pdf,image/jpeg,image/png,image/webp', multiple: true, kw: 'scan teks kenali recognize foto' }),
   S('extractimg', 'convert', 'images', { id: 'Ambil gambar', en: 'Extract images' }, { id: 'Simpan gambar yang ada di dalam PDF.', en: 'Save the pictures inside a PDF.' }),
 
   // Optimize
-  S('compress', 'optimize', 'compress', { id: 'Kompres PDF', en: 'Compress PDF' }, { id: 'Perkecil ukuran file dengan kualitas pilihan.', en: 'Make the file smaller at a quality you pick.' }),
+  T('compress', 'optimize', 'compress', { id: 'Kompres PDF', en: 'Compress PDF' }, { id: 'Perkecil ukuran file dengan kualitas pilihan.', en: 'Make the file smaller at a quality you pick.' }, { accept: '.pdf,application/pdf', kw: 'perkecil kecilkan ukuran size reduce' }),
   S('grayscale', 'optimize', 'gray', { id: 'PDF hitam putih', en: 'Grayscale PDF' }, { id: 'Ubah halaman berwarna menjadi abu-abu.', en: 'Convert colour pages to gray.' }),
   S('flatten', 'optimize', 'flatten', { id: 'Ratakan PDF', en: 'Flatten PDF' }, { id: 'Kunci isian formulir agar tidak berubah.', en: 'Lock form fields so they cannot change.' }),
   S('compare', 'optimize', 'compare', { id: 'Bandingkan PDF', en: 'Compare PDFs' }, { id: 'Lihat perbedaan teks antara dua PDF.', en: 'See text differences between two PDFs.' }),
 
   // Security
   T('scrub', 'security', 'scrub', { id: 'Hapus metadata', en: 'Remove metadata' }, { id: 'Bersihkan judul, penulis, dan info aplikasi pembuat.', en: 'Clear title, author and creator details.' }, { accept: '.pdf,application/pdf', kw: 'privasi bersihkan' }),
-  S('protect', 'security', 'lock', { id: 'Kunci PDF', en: 'Protect PDF' }, { id: 'Tambahkan kata sandi untuk membuka file.', en: 'Add a password to open the file.' }),
-  S('unlock', 'security', 'unlock', { id: 'Buka kunci PDF', en: 'Unlock PDF' }, { id: 'Hapus kata sandi yang kamu ketahui.', en: 'Remove a password you know.' }),
+  T('protect', 'security', 'lock', { id: 'Kunci PDF', en: 'Protect PDF' }, { id: 'Tambahkan kata sandi untuk membuka file.', en: 'Add a password to open the file.' }, { accept: '.pdf,application/pdf', kw: 'password sandi enkripsi encrypt' }),
+  T('unlock', 'security', 'unlock', { id: 'Buka kunci PDF', en: 'Unlock PDF' }, { id: 'Hapus kata sandi yang kamu ketahui.', en: 'Remove a password you know.' }, { accept: '.pdf,application/pdf', kw: 'password sandi decrypt' }),
   S('redact', 'security', 'redact', { id: 'Sensor PDF', en: 'Redact PDF' }, { id: 'Hitamkan teks sensitif secara permanen.', en: 'Black out sensitive text for good.' }),
 ];
 

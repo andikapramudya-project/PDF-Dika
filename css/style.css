@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "Bricolage";
-  src: url("../fonts/bricolage.woff2") format("woff2");
+  font-family: "Jakarta";
+  src: url("../fonts/jakarta.woff2") format("woff2");
   font-weight: 200 800;
   font-display: swap;
 }
@@ -9,13 +9,13 @@
   --bg: #F3F5FA;
   --surface: #FFFFFF;
   --surface-2: #E9EDF6;
-  --ink: #141A33;
+  --ink: #131B3A;
   --muted: #565E80;
   --line: #D6DCEA;
-  --accent: #2346E0;
+  --accent: #1F3FD1;
   --accent-ink: #FFFFFF;
-  --accent-soft: #E3E9FF;
-  --hi: #FFD23F;
+  --accent-soft: #E6EBFD;
+  --hi: #FFC52E;
   --danger: #C2264B;
   --ok: #0B8A5A;
   --c-organize: #2346E0;
@@ -27,8 +27,8 @@
   --r-s: 8px;
   --r-m: 14px;
   --r-l: 22px;
-  --display: "Bricolage", ui-sans-serif, system-ui, sans-serif;
-  --body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --display: "Jakarta", ui-sans-serif, system-ui, sans-serif;
+  --body: "Jakarta", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --ease: cubic-bezier(.2, .7, .2, 1);
   color-scheme: light;
 }
@@ -69,8 +69,11 @@ img, canvas { display: block; max-width: 100%; }
 .topbar { position: sticky; top: 0; z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
 .topbar-in { max-width: 1180px; margin: 0 auto; padding: 10px 16px; display: flex; align-items: center; gap: 12px; }
 .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
-.brand-mark { width: 30px; height: 30px; }
-.brand-name { font: 600 22px/1 var(--display); letter-spacing: -.02em; }
+.brand-mark { width: 32px; height: 32px; }
+.bm-bg { fill: #131B3A; }
+:root[data-theme="dark"] .bm-bg { fill: #27315C; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .bm-bg { fill: #27315C; } }
+.brand-name { font: 450 21px/1 var(--display); letter-spacing: -.025em; }
 .brand-name b { font-weight: 800; }
 .top-actions { margin-left: auto; display: flex; gap: 6px; }
 .iconbtn {
@@ -87,8 +90,7 @@ img, canvas { display: block; max-width: 100%; }
 /* Hero */
 .hero { padding: 48px 0 28px; display: grid; grid-template-columns: 1.15fr .85fr; gap: 40px; align-items: center; }
 .hero h1 {
-  font: 760 clamp(2.4rem, 5.4vw, 4.4rem)/.98 var(--display); letter-spacing: -.035em; margin: 0 0 18px;
-  font-variation-settings: "wdth" 90; max-width: 14ch;
+  font: 780 clamp(2.3rem, 5vw, 4rem)/1.02 var(--display); letter-spacing: -.035em; margin: 0 0 18px; max-width: 15ch;
 }
 .hero p.lede { font-size: 1.15rem; color: var(--muted); max-width: 46ch; margin: 0 0 22px; }
 .promise { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 0; margin: 0; list-style: none; font-size: .95rem; }
@@ -141,7 +143,9 @@ img, canvas { display: block; max-width: 100%; }
   height: 36px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
   cursor: pointer; font-size: .92rem; font-weight: 550; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: var(--ink);
 }
-.chip .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--cat, var(--muted)); }
+.chip .cic { width: 18px; height: 18px; display: inline-flex; color: var(--muted); }
+.chip .cic svg { width: 18px; height: 18px; }
+.chip[aria-pressed="true"] .cic { color: inherit; }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 
 .group { margin: 0 0 34px; }
@@ -383,8 +387,6 @@ img, canvas { display: block; max-width: 100%; }
 .cta { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 22px; }
 .cta .btn { height: 50px; padding: 0 22px; font-size: 1.02rem; }
 .cta .btn.primary { width: auto; }
-.chip-main { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
-.chip-main .dot { background: var(--accent-ink); }
 .demo { display: grid; grid-template-columns: .9fr 1.1fr; gap: 40px; align-items: center; margin: 12px 0 44px; padding: 32px; border-radius: var(--r-l); background: var(--surface); border: 1px solid var(--line); }
 .demo h2 { font: 720 clamp(1.5rem, 2.6vw, 2.1rem)/1.1 var(--display); letter-spacing: -.02em; margin: 0 0 16px; max-width: 18ch; }
 .demo ul { margin: 0 0 22px; padding: 0 0 0 1.1em; color: var(--muted); display: grid; gap: 10px; }
@@ -411,3 +413,6 @@ img, canvas { display: block; max-width: 100%; }
   .demo { grid-template-columns: 1fr; padding: 22px; gap: 26px; }
   .mini-page, .demo-arrow { display: none; }
 }
+
+.kicker { margin: 0 0 8px; font-weight: 650; font-size: .9rem; color: var(--accent); }
+.hero p.lede { font-size: 1.2rem; }

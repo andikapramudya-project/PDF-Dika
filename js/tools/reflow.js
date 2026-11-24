@@ -56,10 +56,26 @@ export async function mount(root, tool) {
       if (!book.blocks.some((b) => b.type === 'p')) {
         stage.replaceChildren(h('section', { class: 'result' },
           h('h2', null, t({ id: 'Tidak ada teks yang bisa disusun ulang', en: 'No text to reflow' })),
-          h('p', null, t({ id: 'PDF ini sepertinya hasil scan (berisi gambar halaman). Alat OCR untuk mengenali teks dari scan akan hadir di tahap berikutnya.', en: 'This PDF looks like a scan (images of pages). An OCR tool to recognise scanned text is coming in the next release.' })),
-          h('button', { class: 'btn', type: 'button', onclick: reset }, t({ id: 'Pilih PDF lain', en: 'Choose another PDF' }))));
+          h('p', null, t({ id: 'PDF ini sepertinya hasil scan (berisi gambar halaman). PDFDika bisa mengenali teksnya dengan OCR dulu, langsung di perangkatmu.', en: 'This PDF looks like a scan (images of pages). PDFDika can recognise its text with OCR first, right on your device.' })),
+          h('div', { class: 'acts' },
+            h('button', { class: 'btn primary', type: 'button', style: { width: 'auto' }, onclick: () => runOcr('ind+eng') }, t({ id: 'Kenali teks (Indonesia + Inggris)', en: 'Recognise text (Indonesian + English)' })),
+            h('button', { class: 'btn', type: 'button', onclick: reset }, t({ id: 'Pilih PDF lain', en: 'Choose another PDF' })))));
         return;
       }
+      await showResult();
+    } catch (e) { reportError(e); reset(); }
+  }
+
+  async function runOcr(langs) {
+    const msg = h('p', { class: 'note' }, t({ id: 'Menyiapkan mesin OCR…', en: 'Preparing the OCR engine…' }));
+    const bar = h('div', { class: 'progress' }, h('i'));
+    stage.replaceChildren(h('section', { class: 'result', 'aria-live': 'polite' }, h('h2', null, t({ id: 'Mengenali teks', en: 'Recognising text' })), msg, bar));
+    try {
+      const { ocrDocument, ocrToBlocks } = await import('./_ocr.js');
+      const pages = await ocrDocument(book.pdf, langs, (i, n) => { msg.textContent = t({ id: 'Mengenali halaman {i} dari {n}…', en: 'Recognising page {i} of {n}…' }, { i, n }); bar.firstChild.style.width = (i / n * 100) + '%'; });
+      book.blocks = ocrToBlocks(pages);
+      book.chapters = chapters(book.blocks, book.title);
+      if (!book.blocks.length) throw new UserError(t({ id: 'Tidak ada teks yang dikenali dari scan ini.', en: 'No text could be recognised in this scan.' }));
       await showResult();
     } catch (e) { reportError(e); reset(); }
   }

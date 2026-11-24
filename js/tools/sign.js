@@ -47,7 +47,7 @@ export async function mount(root, tool) {
           h('button', { class: 'btn small', type: 'button', onclick: async () => { const c = trim(pad); if (!c) return reportError(new UserError(t({ id: 'Kotaknya masih kosong. Gambar tanda tangan dulu.', en: 'The box is empty. Draw your signature first.' }))); keep(await canvasStamp(c)); } }, t({ id: 'Pakai tanda tangan', en: 'Use signature' }))));
       } else if (mode === 'type') {
         const name = h('input', { type: 'text', placeholder: t({ id: 'Nama lengkap', en: 'Full name' }) });
-        const styles = ['italic 600 64px "Segoe Script","Brush Script MT","Snell Roundhand",cursive', 'italic 400 60px Georgia,"Times New Roman",serif', '600 56px "Bricolage",system-ui,sans-serif'];
+        const styles = ['italic 600 64px "Segoe Script","Brush Script MT","Snell Roundhand",cursive', 'italic 400 60px Georgia,"Times New Roman",serif', '600 56px "Jakarta",system-ui,sans-serif'];
         let st = 0;
         area.replaceChildren(field(t({ id: 'Ketik namamu', en: 'Type your name' }), name), field(t({ id: 'Gaya', en: 'Style' }), seg([[0, t({ id: 'Sambung', en: 'Script' })], [1, 'Serif'], [2, 'Sans']], 0, (v) => (st = v))), inkPick(),
           h('button', { class: 'btn small', type: 'button', onclick: async () => {
