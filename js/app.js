@@ -1,0 +1,184 @@
+import { h, t, $, svg, I, getLang, setLang, LS, handoff, reportError } from './core.js';
+import { TOOLS, CATS, byId, catOf } from './tools.js';
+
+const app = $('#app');
+const L = {
+  h1: { id: 'Urus PDF tanpa mengirim file ke mana pun.', en: 'Work on PDFs without sending them anywhere.' },
+  lede: { id: 'Gabung, pisah, tanda tangan, dan ubah PDF langsung di browser. Semua diproses di perangkatmu, jadi dokumen pribadi tetap pribadi.', en: 'Merge, split, sign and convert PDFs right in your browser. Everything runs on your device, so private documents stay private.' },
+  p1: { id: 'Tanpa unggahan', en: 'No uploads' },
+  p2: { id: 'Tanpa akun', en: 'No account' },
+  p3: { id: 'Bisa dipakai offline', en: 'Works offline' },
+  sheetT: { id: 'Taruh PDF atau gambar di sini', en: 'Drop a PDF or images here' },
+  sheetS: { id: 'Lalu pilih apa yang mau dilakukan', en: 'Then choose what to do with it' },
+  pickedT: { id: '{n} file siap. Mau diapakan?', en: '{n} file(s) ready. What would you like to do?' },
+  pickedS: { id: 'Pilih alat. File langsung dibuka di sana.', en: 'Pick a tool. Your files open there straight away.' },
+  search: { id: 'Cari alat, misalnya “gabung”', en: 'Search tools, e.g. “merge”' },
+  all: { id: 'Semua', en: 'All' },
+  soon: { id: 'Segera', en: 'Soon' },
+  none: { id: 'Tidak ada alat yang cocok dengan “{q}”.', en: 'No tool matches “{q}”.' },
+  clear: { id: 'Hapus pencarian', en: 'Clear search' },
+  ready: { id: '{n} alat siap', en: '{n} tools ready' },
+  later: { id: 'hadir di tahap berikutnya', en: 'coming in the next release' },
+  back: { id: 'Semua alat', en: 'All tools' },
+  soonT: { id: 'Alat ini sedang dibuat', en: 'This tool is on the way' },
+  soonP: { id: '{name} masuk tahap berikutnya PDFDika. Sementara itu, coba alat lain yang sudah tersedia.', en: '{name} is part of the next PDFDika release. Meanwhile, try one of the tools that are ready.' },
+  how1t: { id: 'File tidak pernah keluar', en: 'Files never leave' },
+  how1p: { id: 'Pemrosesan memakai JavaScript dan WebAssembly di browsermu. Tidak ada server yang menerima dokumenmu.', en: 'Processing runs in your browser with JavaScript and WebAssembly. No server ever receives your documents.' },
+  how2t: { id: 'Pasang sebagai aplikasi', en: 'Install it as an app' },
+  how2p: { id: 'Tambahkan PDFDika ke layar utama atau desktop, lalu pakai tanpa internet.', en: 'Add PDFDika to your home screen or desktop and use it without internet.' },
+  how3t: { id: 'Gratis, tanpa batas', en: 'Free, no limits' },
+  how3p: { id: 'Tidak ada batas jumlah file atau kuota harian. Batasnya hanya memori perangkatmu.', en: 'No file count limits or daily quotas. The only limit is your device memory.' },
+  foot: { id: 'PDFDika memproses semua file di dalam browsermu. Tidak ada unggahan, tidak ada akun, tidak ada pelacakan.', en: 'PDFDika processes every file inside your browser. No uploads, no accounts, no tracking.' },
+  install: { id: 'Pasang', en: 'Install' },
+  skip: { id: 'Lewati ke konten', en: 'Skip to content' },
+};
+
+let state = { q: '', cat: 'all' };
+
+function toolCard(tool) {
+  const cat = catOf(tool.cat);
+  return h('a', { class: 'tool' + (tool.status === 'soon' ? ' is-soon' : ''), href: '#/' + tool.id, style: `--cat:${cat.color}` },
+    h('span', { class: 'ic', html: svg(tool.icon) }),
+    h('b', null, t(tool.name)),
+    h('span', null, t(tool.desc)),
+    tool.status === 'soon' && h('em', { class: 'soon' }, t(L.soon)));
+}
+
+function matches(tool, q) {
+  if (!q) return true;
+  const hay = [tool.name.id, tool.name.en, tool.desc.id, tool.desc.en, tool.kw || '', tool.id].join(' ').toLowerCase();
+  return q.toLowerCase().split(/\s+/).every((w) => hay.includes(w));
+}
+
+function renderHome() {
+  const dir = h('div');
+  const input = h('input', { type: 'search', placeholder: t(L.search), 'aria-label': t(L.search), value: state.q, autocomplete: 'off' });
+  const chips = h('div', { class: 'chips', role: 'group' });
+  const drawChips = () => chips.replaceChildren(
+    h('button', { class: 'chip', type: 'button', 'aria-pressed': String(state.cat === 'all'), onclick: () => { state.cat = 'all'; drawChips(); drawDir(); } }, t(L.all)),
+    ...CATS.map((c) => h('button', { class: 'chip', type: 'button', style: `--cat:${c.color}`, 'aria-pressed': String(state.cat === c.id), onclick: () => { state.cat = c.id; drawChips(); drawDir(); } }, h('i', { class: 'dot' }), t(c.name))));
+  const drawDir = () => {
+    const groups = CATS.filter((c) => state.cat === 'all' || state.cat === c.id).map((c) => {
+      const list = TOOLS.filter((x) => x.cat === c.id && matches(x, state.q))
+        .sort((a, b) => (a.status === 'soon') - (b.status === 'soon'));
+      if (!list.length) return null;
+      const ready = list.filter((x) => x.status === 'ready').length;
+      return h('section', { class: 'group' },
+        h('h2', null, t(c.name), h('small', null, ready ? t(L.ready, { n: ready }) : t(L.later))),
+        h('div', { class: 'grid' }, list.map(toolCard)));
+    }).filter(Boolean);
+    dir.replaceChildren(...(groups.length ? groups : [h('div', { class: 'empty' },
+      h('p', null, t(L.none, { q: state.q })),
+      h('button', { class: 'btn small', type: 'button', onclick: () => { state.q = ''; input.value = ''; state.cat = 'all'; drawChips(); drawDir(); input.focus(); } }, t(L.clear)))]));
+  };
+  input.addEventListener('input', () => { state.q = input.value.trim(); drawDir(); });
+  drawChips(); drawDir();
+
+  // Hero drop target: hold files, then offer the tools that accept them.
+  const picked = h('div', { class: 'picked', hidden: true });
+  const fileIn = h('input', { type: 'file', multiple: true, accept: '.pdf,application/pdf,image/*', class: 'sr', tabindex: '-1' });
+  const sheet = h('div', { class: 'sheet', role: 'button', tabindex: '0', 'aria-label': t(L.sheetT) },
+    h('div', { class: 'sheet-in' }, h('span', { html: svg(I.upload) }), h('strong', null, t(L.sheetT)), h('span', null, t(L.sheetS))),
+    h('div', { class: 'sheet-lines', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')), fileIn);
+  const takeFiles = (files) => {
+    files = [...files].filter((f) => f.type === 'application/pdf' || /\.pdf$/i.test(f.name) || f.type.startsWith('image/'));
+    if (!files.length) return;
+    handoff.files = files;
+    const allImg = files.every((f) => f.type.startsWith('image/'));
+    const anyImg = files.some((f) => f.type.startsWith('image/'));
+    const fit = TOOLS.filter((x) => x.status === 'ready' && (allImg ? x.id === 'img2pdf' : anyImg ? x.id === 'img2pdf' || x.id === 'merge' : x.id !== 'img2pdf'))
+      .filter((x) => files.length === 1 || x.multiple || x.id === 'merge');
+    picked.hidden = false;
+    picked.replaceChildren(h('h2', null, t(L.pickedT, { n: files.length })), h('p', null, t(L.pickedS)),
+      h('div', { class: 'chips' }, fit.map((x) => h('a', { class: 'chip', href: '#/' + x.id, style: `--cat:${catOf(x.cat).color}` }, h('i', { class: 'dot' }), t(x.name)))));
+    picked.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+  sheet.addEventListener('click', (e) => { if (e.target !== fileIn) fileIn.click(); });
+  sheet.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileIn.click(); } });
+  fileIn.addEventListener('change', () => { takeFiles(fileIn.files); fileIn.value = ''; });
+  sheet.addEventListener('dragover', (e) => { e.preventDefault(); sheet.classList.add('over'); });
+  sheet.addEventListener('dragleave', () => sheet.classList.remove('over'));
+  sheet.addEventListener('drop', (e) => { e.preventDefault(); sheet.classList.remove('over'); takeFiles(e.dataTransfer.files); });
+
+  const ok = (s) => h('li', null, h('span', { html: svg(I.checkCircle) }), t(s));
+  app.replaceChildren(h('div', { class: 'wrap' },
+    h('section', { class: 'hero intro' },
+      h('div', null,
+        h('h1', null, t(L.h1)),
+        h('p', { class: 'lede' }, t(L.lede)),
+        h('ul', { class: 'promise' }, ok(L.p1), ok(L.p2), ok(L.p3))),
+      sheet),
+    picked,
+    h('div', { class: 'dir-head', id: 'tools' }, h('div', { class: 'search' }, h('span', { html: svg(I.search) }), input), chips),
+    dir,
+    h('section', { class: 'how' },
+      h('div', null, h('h3', null, t(L.how1t)), h('p', null, t(L.how1p))),
+      h('div', null, h('h3', null, t(L.how2t)), h('p', null, t(L.how2p))),
+      h('div', null, h('h3', null, t(L.how3t)), h('p', null, t(L.how3p))))));
+  document.title = 'PDFDika: ' + t({ id: 'alat PDF yang bekerja di perangkatmu', en: 'PDF tools that run on your device' });
+}
+
+async function renderTool(tool) {
+  const cat = catOf(tool.cat);
+  const root = h('div', { class: 'wrap' });
+  root.append(
+    h('a', { class: 'back crumb', href: '#/' }, h('span', { html: svg(I.back), style: { width: '18px', display: 'inline-flex' } }), t(L.back)),
+    h('header', { class: 'tool-head', style: `--cat:${cat.color}` },
+      h('span', { class: 'ic', html: svg(tool.icon) }),
+      h('div', null, h('h1', null, t(tool.name)), h('p', null, t(tool.desc)))));
+  app.replaceChildren(root);
+  document.title = t(tool.name) + ' · PDFDika';
+  if (tool.status === 'soon') {
+    root.append(h('section', { class: 'result', style: { marginBottom: '48px' } },
+      h('h2', null, t(L.soonT)), h('p', null, t(L.soonP, { name: t(tool.name) })),
+      h('a', { class: 'btn', href: '#/' }, t(L.back))));
+    return;
+  }
+  try {
+    const mod = await import(`./tools/${tool.module || tool.id}.js`);
+    await mod.mount(root, tool);
+  } catch (e) { reportError(e); }
+}
+
+function route() {
+  const id = location.hash.replace(/^#\/?/, '').split(/[?#]/)[0];
+  const tool = id && byId(id);
+  const go = () => {
+    if (tool) renderTool(tool); else renderHome();
+    if (id !== 'tools') window.scrollTo({ top: 0 });
+    if (id === 'tools') $('#tools')?.scrollIntoView();
+  };
+  if (document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches && app.childElementCount) document.startViewTransition(go);
+  else go();
+}
+
+function chrome() {
+  $('#langLabel').textContent = getLang() === 'id' ? 'EN' : 'ID';
+  $('#langBtn').setAttribute('aria-label', getLang() === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia');
+  $('#footText').textContent = t(L.foot);
+  $('#installLabel').textContent = t(L.install);
+  $('.skip').textContent = t(L.skip);
+  $('#year').textContent = new Date().getFullYear();
+}
+
+$('#langBtn').addEventListener('click', () => { setLang(getLang() === 'id' ? 'en' : 'id'); chrome(); route(); });
+$('#themeBtn').addEventListener('click', () => {
+  const root = document.documentElement;
+  const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme = dark ? 'light' : 'dark';
+  LS.set('pdfdika.theme', root.dataset.theme);
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) {
+    const s = $('.search input'); if (s) { e.preventDefault(); s.focus(); }
+  }
+});
+
+let deferred;
+window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferred = e; $('#installBtn').hidden = false; });
+$('#installBtn').addEventListener('click', async () => { if (!deferred) return; deferred.prompt(); await deferred.userChoice; deferred = null; $('#installBtn').hidden = true; });
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+
+window.addEventListener('hashchange', route);
+chrome();
+route();

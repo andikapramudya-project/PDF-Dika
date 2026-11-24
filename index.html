@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>PDFDika: alat PDF yang bekerja di perangkatmu</title>
+<meta name="description" content="Gabung, pisah, putar, tanda tangan, dan ubah PDF langsung di browser. File tidak pernah diunggah ke server.">
+<meta name="theme-color" content="#F3F5FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#10131C" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-180.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preload" href="fonts/bricolage.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<script>
+  // Apply saved theme before paint to avoid a flash.
+  try { var t = localStorage.getItem('pdfdika.theme'); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+</head>
+<body>
+<a class="skip" href="#app">Lewati ke konten</a>
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#/" aria-label="PDFDika, beranda">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M7 3h13l7 7v17a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="var(--ink)"/><path d="M20 3v5a2 2 0 0 0 2 2h5" fill="var(--hi)"/><path d="M11 12h4.2c3.6 0 5.8 2.2 5.8 5.5S18.8 23 15.2 23H11z" fill="none" stroke="var(--bg)" stroke-width="2.4" stroke-linejoin="round"/></svg>
+      <span class="brand-name">PDF<b>Dika</b></span>
+    </a>
+    <div class="top-actions">
+      <button class="iconbtn" id="langBtn" type="button" aria-label="Ganti bahasa"><span id="langLabel">EN</span></button>
+      <button class="iconbtn" id="themeBtn" type="button" aria-label="Ganti tema">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="iconbtn install" id="installBtn" type="button" hidden><span id="installLabel">Pasang</span></button>
+    </div>
+  </div>
+</header>
+<main id="app" tabindex="-1"></main>
+<footer class="foot">
+  <div class="foot-in">
+    <p id="footText">PDFDika memproses semua file di dalam browsermu. Tidak ada unggahan, tidak ada akun, tidak ada pelacakan.</p>
+    <p class="foot-small">© <span id="year"></span> PDFDika</p>
+  </div>
+</footer>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
