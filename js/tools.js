@@ -1,4 +1,4 @@
-// Tool catalogue. status 'ready' tools have a module in js/tools/<id>.js; 'soon' tools are stage 2.
+// Tool catalogue. status 'ready' tools have a module in js/tools/<id>.js; 'soon' tools show a placeholder.
 
 export const CATS = [
   { id: 'organize', color: 'var(--accent)', icon: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>', name: { id: 'Atur halaman', en: 'Organize pages' } },
@@ -62,8 +62,8 @@ export const TOOLS = [
   T('reverse', 'organize', 'reverse', { id: 'Balik urutan', en: 'Reverse order' }, { id: 'Urutkan halaman dari terakhir ke pertama.', en: 'Order pages from last to first.' }, { accept: '.pdf,application/pdf', kw: 'terbalik' }),
   T('blank', 'organize', 'blank', { id: 'Sisipkan halaman kosong', en: 'Insert blank pages' }, { id: 'Tambahkan halaman kosong di posisi yang kamu pilih.', en: 'Add empty pages where you need them.' }, { accept: '.pdf,application/pdf', kw: 'kosong insert' }),
   T('nup', 'organize', 'nup', { id: 'Beberapa halaman per lembar', en: 'Pages per sheet' }, { id: 'Cetak 2, 4, atau 6 halaman dalam satu lembar.', en: 'Fit 2, 4 or 6 pages onto one sheet.' }, { accept: '.pdf,application/pdf', kw: 'n-up print cetak' }),
-  S('crop', 'organize', 'crop', { id: 'Potong PDF', en: 'Crop PDF' }, { id: 'Pangkas margin halaman.', en: 'Trim page margins.' }),
-  S('resize', 'organize', 'resize', { id: 'Ubah ukuran halaman', en: 'Resize pages' }, { id: 'Sesuaikan ke A4, Letter, atau ukuran lain.', en: 'Fit pages to A4, Letter or a custom size.' }),
+  T('crop', 'organize', 'crop', { id: 'Potong PDF', en: 'Crop PDF' }, { id: 'Pangkas margin atau pilih area halaman.', en: 'Trim margins or pick an area of the page.' }, { accept: '.pdf,application/pdf', kw: 'pangkas margin trim' }),
+  T('resize', 'organize', 'resize', { id: 'Ubah ukuran halaman', en: 'Resize pages' }, { id: 'Sesuaikan ke A4, Letter, atau ukuran lain.', en: 'Fit pages to A4, Letter or a custom size.' }, { accept: '.pdf,application/pdf', kw: 'a4 f4 folio letter ukuran kertas' }),
 
   // Edit & sign
   T('sign', 'edit', 'sign', { id: 'Tanda tangan PDF', en: 'Sign PDF' }, { id: 'Gambar, ketik, atau unggah tanda tangan lalu tempatkan.', en: 'Draw, type or upload a signature and place it.' }, { accept: '.pdf,application/pdf', kw: 'ttd signature paraf' }),
@@ -72,9 +72,9 @@ export const TOOLS = [
   T('addtext', 'edit', 'addtext', { id: 'Tambah teks', en: 'Add text' }, { id: 'Ketik teks baru di mana saja pada halaman.', en: 'Type new text anywhere on a page.' }, { accept: '.pdf,application/pdf', kw: 'tulis edit teks' }),
   T('addimage', 'edit', 'addimg', { id: 'Tambah gambar', en: 'Add image' }, { id: 'Tempel logo, stempel, atau foto ke halaman.', en: 'Place a logo, stamp or photo on a page.' }, { accept: '.pdf,application/pdf', kw: 'logo stempel cap' }),
   T('metadata', 'edit', 'info', { id: 'Edit properti', en: 'Edit properties' }, { id: 'Ubah judul, penulis, subjek, dan kata kunci.', en: 'Change title, author, subject and keywords.' }, { accept: '.pdf,application/pdf', kw: 'metadata judul author' }),
-  S('header', 'edit', 'header', { id: 'Header & footer', en: 'Header & footer' }, { id: 'Tambahkan teks di atas atau bawah setiap halaman.', en: 'Add text above or below every page.' }),
-  S('forms', 'edit', 'form', { id: 'Isi formulir', en: 'Fill in forms' }, { id: 'Isi kolom formulir PDF.', en: 'Complete fillable PDF fields.' }),
-  S('bookmarks', 'edit', 'bookmark', { id: 'Tambah bookmark', en: 'Add bookmarks' }, { id: 'Buat daftar isi yang bisa diklik.', en: 'Build a clickable table of contents.' }),
+  T('header', 'edit', 'header', { id: 'Header & footer', en: 'Header & footer' }, { id: 'Tambahkan teks di atas atau bawah setiap halaman.', en: 'Add text above or below every page.' }, { accept: '.pdf,application/pdf', kw: 'kop kepala kaki footer header' }),
+  T('forms', 'edit', 'form', { id: 'Isi formulir', en: 'Fill in forms' }, { id: 'Isi kolom formulir PDF lalu simpan.', en: 'Complete fillable PDF fields and save.' }, { accept: '.pdf,application/pdf', kw: 'form formulir isian fill' }),
+  T('bookmarks', 'edit', 'bookmark', { id: 'Tambah bookmark', en: 'Add bookmarks' }, { id: 'Buat daftar isi yang bisa diklik.', en: 'Build a clickable table of contents.' }, { accept: '.pdf,application/pdf', kw: 'outline daftar isi toc penanda' }),
 
   // Convert
   T('reflow', 'convert', 'reflow', { id: 'Mode baca & EPUB', en: 'Reading mode & EPUB' }, { id: 'Susun ulang PDF agar nyaman dibaca di HP. Simpan sebagai HTML offline atau EPUB.', en: 'Reflow a PDF for comfortable phone reading. Save as offline HTML or EPUB.' }, { accept: '.pdf,application/pdf', kw: 'reflow epub html baca ebook buku kindle novel mobile hp' }),
@@ -82,22 +82,22 @@ export const TOOLS = [
   T('img2pdf', 'convert', 'img2pdf', { id: 'Gambar ke PDF', en: 'Images to PDF' }, { id: 'Ubah JPG, PNG, atau WebP menjadi satu PDF.', en: 'Turn JPG, PNG or WebP into one PDF.' }, { accept: 'image/jpeg,image/png,image/webp,image/gif,image/bmp,.jpg,.jpeg,.png,.webp', multiple: true, kw: 'jpg png foto' }),
   T('pdf2img', 'convert', 'pdf2img', { id: 'PDF ke gambar', en: 'PDF to images' }, { id: 'Simpan setiap halaman sebagai JPG atau PNG.', en: 'Save every page as JPG or PNG.' }, { accept: '.pdf,application/pdf', kw: 'jpg png foto' }),
   T('pdf2text', 'convert', 'text', { id: 'PDF ke teks', en: 'PDF to text' }, { id: 'Ambil semua teks ke file .txt.', en: 'Pull all text into a .txt file.' }, { accept: '.pdf,application/pdf', kw: 'txt salin copy' }),
-  S('pdf2excel', 'convert', 'sheet', { id: 'PDF ke Excel', en: 'PDF to Excel' }, { id: 'Ambil tabel ke XLSX.', en: 'Pull tables into XLSX.' }),
-  S('pdf2ppt', 'convert', 'slides', { id: 'PDF ke PowerPoint', en: 'PDF to PowerPoint' }, { id: 'Satu slide untuk setiap halaman.', en: 'One slide per page.' }),
+  T('pdf2excel', 'convert', 'sheet', { id: 'PDF ke Excel', en: 'PDF to Excel' }, { id: 'Pindahkan tabel ke XLSX.', en: 'Move tables into XLSX.' }, { accept: '.pdf,application/pdf', kw: 'xlsx excel tabel spreadsheet' }),
+  T('pdf2ppt', 'convert', 'slides', { id: 'PDF ke PowerPoint', en: 'PDF to PowerPoint' }, { id: 'Jadikan setiap halaman satu slide.', en: 'Turn every page into a slide.' }, { accept: '.pdf,application/pdf', kw: 'pptx powerpoint slide presentasi' }),
   T('ocr', 'convert', 'ocr', { id: 'OCR PDF', en: 'OCR PDF' }, { id: 'Jadikan hasil scan atau foto dokumen bisa dicari dan disalin.', en: 'Make scans and document photos searchable and copyable.' }, { accept: '.pdf,application/pdf,image/jpeg,image/png,image/webp', multiple: true, kw: 'scan teks kenali recognize foto' }),
-  S('extractimg', 'convert', 'images', { id: 'Ambil gambar', en: 'Extract images' }, { id: 'Simpan gambar yang ada di dalam PDF.', en: 'Save the pictures inside a PDF.' }),
+  T('extractimg', 'convert', 'images', { id: 'Ambil gambar', en: 'Extract images' }, { id: 'Simpan gambar yang ada di dalam PDF.', en: 'Save the pictures inside a PDF.' }, { accept: '.pdf,application/pdf', kw: 'foto gambar image ekstrak' }),
 
   // Optimize
   T('compress', 'optimize', 'compress', { id: 'Kompres PDF', en: 'Compress PDF' }, { id: 'Perkecil ukuran file dengan kualitas pilihan.', en: 'Make the file smaller at a quality you pick.' }, { accept: '.pdf,application/pdf', kw: 'perkecil kecilkan ukuran size reduce' }),
-  S('grayscale', 'optimize', 'gray', { id: 'PDF hitam putih', en: 'Grayscale PDF' }, { id: 'Ubah halaman berwarna menjadi abu-abu.', en: 'Convert colour pages to gray.' }),
-  S('flatten', 'optimize', 'flatten', { id: 'Ratakan PDF', en: 'Flatten PDF' }, { id: 'Kunci isian formulir agar tidak berubah.', en: 'Lock form fields so they cannot change.' }),
-  S('compare', 'optimize', 'compare', { id: 'Bandingkan PDF', en: 'Compare PDFs' }, { id: 'Lihat perbedaan teks antara dua PDF.', en: 'See text differences between two PDFs.' }),
+  T('grayscale', 'optimize', 'gray', { id: 'PDF hitam putih', en: 'Grayscale PDF' }, { id: 'Ubah halaman berwarna menjadi abu-abu.', en: 'Convert colour pages to gray.' }, { accept: '.pdf,application/pdf', kw: 'abu-abu grayscale hitam putih' }),
+  T('flatten', 'optimize', 'flatten', { id: 'Ratakan PDF', en: 'Flatten PDF' }, { id: 'Kunci isian formulir agar tidak berubah.', en: 'Lock form fields so they cannot change.' }, { accept: '.pdf,application/pdf', kw: 'flatten kunci formulir' }),
+  T('compare', 'optimize', 'compare', { id: 'Bandingkan PDF', en: 'Compare PDFs' }, { id: 'Lihat perbedaan teks antara dua PDF.', en: 'See text differences between two PDFs.' }, { accept: '.pdf,application/pdf', multiple: true, kw: 'beda diff bandingkan revisi' }),
 
   // Security
   T('scrub', 'security', 'scrub', { id: 'Hapus metadata', en: 'Remove metadata' }, { id: 'Bersihkan judul, penulis, dan info aplikasi pembuat.', en: 'Clear title, author and creator details.' }, { accept: '.pdf,application/pdf', kw: 'privasi bersihkan' }),
   T('protect', 'security', 'lock', { id: 'Kunci PDF', en: 'Protect PDF' }, { id: 'Tambahkan kata sandi untuk membuka file.', en: 'Add a password to open the file.' }, { accept: '.pdf,application/pdf', kw: 'password sandi enkripsi encrypt' }),
   T('unlock', 'security', 'unlock', { id: 'Buka kunci PDF', en: 'Unlock PDF' }, { id: 'Hapus kata sandi yang kamu ketahui.', en: 'Remove a password you know.' }, { accept: '.pdf,application/pdf', kw: 'password sandi decrypt' }),
-  S('redact', 'security', 'redact', { id: 'Sensor PDF', en: 'Redact PDF' }, { id: 'Hitamkan teks sensitif secara permanen.', en: 'Black out sensitive text for good.' }),
+  T('redact', 'security', 'redact', { id: 'Sensor PDF', en: 'Redact PDF' }, { id: 'Hitamkan teks sensitif secara permanen.', en: 'Black out sensitive text for good.' }, { accept: '.pdf,application/pdf', kw: 'sensor hitamkan redaksi rahasia' }),
 ];
 
 export const byId = (id) => TOOLS.find((x) => x.id === id);

@@ -30,21 +30,20 @@ Situs ini bisa dipasang sebagai aplikasi (PWA), tersedia dalam Bahasa Indonesia 
 
 | Kategori | Alat |
 | --- | --- |
-| **Atur** | Gabung PDF, Pisah PDF, Atur halaman, Putar, Hapus halaman, Ambil halaman, Balik urutan, Sisipkan halaman kosong, Beberapa halaman per lembar |
-| **Edit** | Tanda tangan, Watermark, Nomor halaman, Tambah teks, Tambah gambar, Edit properti |
-| **Konversi** | Mode baca & EPUB, PDF ke Word, Gambar ke PDF, PDF ke gambar, PDF ke teks, OCR (Indonesia dan Inggris) |
-| **Optimalkan** | Kompres PDF |
-| **Keamanan** | Kunci PDF (AES-256), Buka kunci PDF, Hapus metadata |
+| **Atur** | Gabung PDF, Pisah PDF, Atur halaman, Putar, Hapus halaman, Ambil halaman, Balik urutan, Sisipkan halaman kosong, Beberapa halaman per lembar, Potong PDF, Ubah ukuran halaman (A4, F4, Letter, dan lainnya) |
+| **Edit** | Tanda tangan, Watermark, Nomor halaman, Tambah teks, Tambah gambar, Edit properti, Header & footer, Isi formulir, Bookmark |
+| **Konversi** | Mode baca & EPUB, PDF ke Word, PDF ke Excel, PDF ke PowerPoint, Gambar ke PDF, PDF ke gambar, PDF ke teks, Ambil gambar, OCR (Indonesia dan Inggris) |
+| **Optimalkan** | Kompres PDF, PDF hitam putih, Ratakan PDF, Bandingkan PDF |
+| **Keamanan** | Kunci PDF (AES-256), Buka kunci PDF, Sensor PDF, Hapus metadata |
 
 ### Sorotan
 
 - **Mode baca & EPUB.** Menyusun ulang PDF (buku, modul, jurnal dua kolom) menjadi teks yang mengalir agar nyaman dibaca di HP. Header, footer, dan nomor halaman dibuang, kata yang terpotong disambung kembali, dan judul bab menjadi daftar isi. Hasilnya bisa disimpan sebagai HTML offline, EPUB, Word (DOCX), atau PDF ukuran HP.
 - **OCR.** Mengenali teks pada PDF hasil scan atau foto, lalu menghasilkan PDF yang bisa dicari dan disalin, atau file teks biasa. PDF scan juga bisa langsung dibuka di Mode baca.
 - **Kompres.** Mengompres ulang gambar di dalam PDF dengan tiga tingkat kualitas, lalu merapikan struktur file tanpa mengurangi kualitas teks.
-
-### Segera hadir
-
-Sensor (redaksi), potong dan ubah ukuran halaman, hitam putih, ratakan formulir, header dan footer, ambil gambar, PDF ke PowerPoint, PDF ke Excel, bandingkan PDF, isi formulir, dan penanda (bookmark).
+- **Sensor.** Tandai area dengan menyeret atau cari kata (nama, NIK, nomor rekening). Halaman yang disensor disimpan ulang sebagai gambar, sehingga teks di balik kotak hitam benar-benar hilang.
+- **Bandingkan.** Menampilkan kata yang ditambah dan dihapus antara dua versi dokumen, lengkap dengan laporan HTML yang bisa diunduh.
+- **PDF ke Excel.** Membaca kolom tabel dari posisi teks dan mengenali format angka Indonesia (1.250.000 dan 12,5).
 
 ## Teknologi
 
@@ -107,4 +106,4 @@ Saat mengubah file, naikkan nilai `VERSION` di `sw.js` agar pengunjung mendapatk
 
 ---
 
-<p align="center">© PDFDika</p>
+<p align="center">© 2026 Andika Pramudya</p>

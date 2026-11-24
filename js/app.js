@@ -31,15 +31,18 @@ const L = {
   back: { id: 'Semua alat', en: 'All tools' },
   soonT: { id: 'Alat ini sedang dibuat', en: 'This tool is on the way' },
   soonP: { id: '{name} masuk tahap berikutnya PDFDika. Sementara itu, coba alat lain yang sudah tersedia.', en: '{name} is part of the next PDFDika release. Meanwhile, try one of the tools that are ready.' },
-  how1t: { id: 'File tidak pernah keluar', en: 'Files never leave' },
-  how1p: { id: 'Pemrosesan memakai JavaScript dan WebAssembly di browsermu. Tidak ada server yang menerima dokumenmu.', en: 'Processing runs in your browser with JavaScript and WebAssembly. No server ever receives your documents.' },
-  how2t: { id: 'Pasang sebagai aplikasi', en: 'Install it as an app' },
-  how2p: { id: 'Tambahkan PDFDika ke layar utama atau desktop, lalu pakai tanpa internet.', en: 'Add PDFDika to your home screen or desktop and use it without internet.' },
-  how3t: { id: 'Gratis, tanpa batas', en: 'Free, no limits' },
-  how3p: { id: 'Tidak ada batas jumlah file atau kuota harian. Batasnya hanya memori perangkatmu.', en: 'No file count limits or daily quotas. The only limit is your device memory.' },
-  foot: { id: 'PDFDika memproses semua file di dalam browsermu. Tidak ada unggahan, tidak ada akun, tidak ada pelacakan.', en: 'PDFDika processes every file inside your browser. No uploads, no accounts, no tracking.' },
+  how1: { id: 'File tetap di perangkatmu', en: 'Files stay on your device' },
+  how2: { id: 'Bisa dipakai offline', en: 'Works offline' },
+  how3: { id: 'Gratis, tanpa batas', en: 'Free, no limits' },
+  src: { id: 'Kode sumber', en: 'Source code' },
   install: { id: 'Pasang', en: 'Install' },
   skip: { id: 'Lewati ke konten', en: 'Skip to content' },
+};
+
+const HOW = {
+  shield: '<path d="M12 3l8 3v6c0 4.5-3.4 8.3-8 9-4.6-.7-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  offline: '<path d="M12 4v11M7 10l5 5 5-5"/><path d="M5 20h14"/>',
+  free: '<path d="M7 9.5a2.5 2.5 0 1 0 0 5c2.5 0 7.5-5 10-5a2.5 2.5 0 1 1 0 5c-2.5 0-7.5-5-10-5z"/>',
 };
 
 let state = { q: '', cat: 'all' };
@@ -146,10 +149,8 @@ function renderHome() {
     h('div', { class: 'dir-head', id: 'tools' }, h('div', { class: 'search' }, h('span', { html: svg(I.search) }), input), chips),
     dir,
     demo(),
-    h('section', { class: 'how' },
-      h('div', null, h('h3', null, t(L.how1t)), h('p', null, t(L.how1p))),
-      h('div', null, h('h3', null, t(L.how2t)), h('p', null, t(L.how2p))),
-      h('div', null, h('h3', null, t(L.how3t)), h('p', null, t(L.how3p))))));
+    h('ul', { class: 'how' }, [[HOW.shield, L.how1], [HOW.offline, L.how2], [HOW.free, L.how3]].map(([ic, s]) =>
+      h('li', null, h('span', { html: svg(ic) }), t(s))))));
   document.title = 'PDFDika: ' + t({ id: 'semua alat PDF, langsung di browser', en: 'every PDF tool, right in your browser' });
 }
 
@@ -190,7 +191,7 @@ function route() {
 function chrome() {
   $('#langLabel').textContent = getLang() === 'id' ? 'EN' : 'ID';
   $('#langBtn').setAttribute('aria-label', getLang() === 'id' ? 'Switch to English' : 'Ganti ke Bahasa Indonesia');
-  $('#footText').textContent = t(L.foot);
+  $('#srcLink').textContent = t(L.src);
   $('#installLabel').textContent = t(L.install);
   $('.skip').textContent = t(L.skip);
   $('#year').textContent = new Date().getFullYear();

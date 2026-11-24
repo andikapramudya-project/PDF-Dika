@@ -1,6 +1,7 @@
 import { h, t, pdfLib, openPdf, stem, fmtSize, qpdf } from '../core.js';
 import { shell, field, seg } from '../ui.js';
 import { singlePdf } from './_single.js';
+import { rawPixels, toImageData, filterOf, components } from './_img.js';
 
 const LEVELS = {
   light: { q: 0.82, max: 2400 },
@@ -12,7 +13,7 @@ async function toJpeg(canvas, q) { const b = await new Promise((r) => canvas.toB
 
 /** Re-encode photos inside the PDF as smaller JPEGs. Returns number of images changed. */
 async function shrinkImages(doc, lib, { q, max }) {
-  const { PDFName, PDFRawStream, PDFNumber, decodePDFRawStream } = lib;
+  const { PDFName, PDFRawStream, PDFNumber } = lib;
   let changed = 0;
   for (const [ref, obj] of doc.context.enumerateIndirectObjects()) {
     if (!(obj instanceof PDFRawStream)) continue;
@@ -21,27 +22,21 @@ async function shrinkImages(doc, lib, { q, max }) {
     if (d.get(PDFName.of('ImageMask')) || d.get(PDFName.of('SMask')) || d.get(PDFName.of('Mask'))) continue; // keep transparency intact
     const w = d.get(PDFName.of('Width'))?.asNumber?.(), hgt = d.get(PDFName.of('Height'))?.asNumber?.();
     if (!w || !hgt || w * hgt < 40000) continue; // tiny images are not worth it
-    const filter = d.get(PDFName.of('Filter'))?.toString() || '';
-    const cs = d.get(PDFName.of('ColorSpace'))?.toString() || '';
-    const bpc = d.get(PDFName.of('BitsPerComponent'))?.asNumber?.();
+    const filter = filterOf(d, lib);
     let bmp;
     try {
       if (filter === '/DCTDecode') {
-        if (cs === '/DeviceCMYK') continue;
+        if (!components(d, lib)) continue; // CMYK and friends decode unreliably in a canvas
         bmp = await createImageBitmap(new Blob([obj.contents], { type: 'image/jpeg' }));
-      } else if ((filter === '/FlateDecode' || filter === '') && bpc === 8 && (cs === '/DeviceRGB' || cs === '/DeviceGray')) {
-        const raw = decodePDFRawStream(obj).decode();
-        const n = cs === '/DeviceRGB' ? 3 : 1;
-        if (raw.length < w * hgt * n) continue;
-        const img = new ImageData(w, hgt);
-        for (let i = 0, j = 0; i < w * hgt; i++, j += n) { const p = i * 4; img.data[p] = raw[j]; img.data[p + 1] = raw[j + (n === 3 ? 1 : 0)]; img.data[p + 2] = raw[j + (n === 3 ? 2 : 0)]; img.data[p + 3] = 255; }
-        bmp = await createImageBitmap(img);
-      } else continue;
+      } else {
+        const px = rawPixels(obj, lib);
+        if (!px) continue;
+        bmp = await createImageBitmap(toImageData(px));
+      }
     } catch { continue; }
     const s = Math.min(1, max / Math.max(bmp.width, bmp.height));
     const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(bmp.width * s)); c.height = Math.max(1, Math.round(bmp.height * s));
     const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(bmp, 0, 0, c.width, c.height);
-    if (cs === '/DeviceGray') { const id = g.getImageData(0, 0, c.width, c.height); g.putImageData(id, 0, 0); }
     const jpg = await toJpeg(c, q);
     if (jpg.length >= obj.contents.length * 0.92) continue; // only keep real savings
     const nd = d.clone(doc.context);
