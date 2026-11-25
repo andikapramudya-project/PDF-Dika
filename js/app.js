@@ -1,5 +1,6 @@
 import { h, t, $, svg, I, getLang, setLang, LS, handoff, reportError } from './core.js';
-import { TOOLS, CATS, byId, catOf } from './tools.js';
+import { TOOLS, CATS, byId, catOf, matches } from './tools.js';
+import { openPalette, paletteChrome } from './cmdk.js';
 
 const app = $('#app');
 const L = {
@@ -54,12 +55,6 @@ function toolCard(tool) {
     h('b', null, t(tool.name)),
     h('span', null, t(tool.desc)),
     tool.status === 'soon' && h('em', { class: 'soon' }, t(L.soon)));
-}
-
-function matches(tool, q) {
-  if (!q) return true;
-  const hay = [tool.name.id, tool.name.en, tool.desc.id, tool.desc.en, tool.kw || '', tool.id].join(' ').toLowerCase();
-  return q.toLowerCase().split(/\s+/).every((w) => hay.includes(w));
 }
 
 // A small live preview of the reader so visitors can feel it before choosing a file.
@@ -195,9 +190,11 @@ function chrome() {
   $('#installLabel').textContent = t(L.install);
   $('.skip').textContent = t(L.skip);
   $('#year').textContent = new Date().getFullYear();
+  paletteChrome();
 }
 
 $('#langBtn').addEventListener('click', () => { setLang(getLang() === 'id' ? 'en' : 'id'); chrome(); route(); });
+$('#cmdkBtn').addEventListener('click', () => openPalette());
 $('#themeBtn').addEventListener('click', () => {
   const root = document.documentElement;
   const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
@@ -205,8 +202,10 @@ $('#themeBtn').addEventListener('click', () => {
   LS.set('pdfdika.theme', root.dataset.theme);
 });
 document.addEventListener('keydown', (e) => {
-  if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName)) {
-    const s = $('.search input'); if (s) { e.preventDefault(); s.focus(); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); return; }
+  if (e.key === '/' && !/input|textarea|select/i.test(document.activeElement.tagName) && !document.activeElement.isContentEditable) {
+    e.preventDefault();
+    const s = $('.search input'); if (s) s.focus(); else openPalette();
   }
 });
 

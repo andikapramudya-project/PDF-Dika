@@ -1,5 +1,5 @@
 // Offline cache. Bump VERSION whenever files change so visitors get the update.
-const VERSION = 'pdfdika-v4';
+const VERSION = 'pdfdika-v5';
 const FILES = [
   './',
   'css/style.css',
@@ -12,6 +12,7 @@ const FILES = [
   'icons/maskable.svg',
   'index.html',
   'js/app.js',
+  'js/cmdk.js',
   'js/core.js',
   'js/reflow/engine.js',
   'js/reflow/export.js',

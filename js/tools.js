@@ -102,3 +102,10 @@ export const TOOLS = [
 
 export const byId = (id) => TOOLS.find((x) => x.id === id);
 export const catOf = (id) => CATS.find((c) => c.id === id);
+
+/** Does a tool match every word of a search query (names, descriptions and keywords in both languages)? */
+export function matches(tool, q) {
+  if (!q) return true;
+  const hay = [tool.name.id, tool.name.en, tool.desc.id, tool.desc.en, tool.kw || '', tool.id].join(' ').toLowerCase();
+  return q.toLowerCase().split(/\s+/).every((w) => hay.includes(w));
+}
